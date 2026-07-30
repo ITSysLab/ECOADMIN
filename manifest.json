@@ -1,0 +1,45 @@
+{
+  "manifest_version": 3,
+  "name": "ECOADMIN - PDF Access Request Analyzer",
+  "version": "1.0.0",
+  "description": "Анализ файлов 'Запрос на доступ к корпоративным сервисам', извлечение данных сотрудников (ФИО, Должность, Организация) и подготовка к Active Directory",
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "storage"
+  ],
+  "host_permissions": [
+    "https://generativelanguage.googleapis.com/*",
+    "<all_urls>"
+  ],
+  "action": {
+    "default_popup": "popup/popup.html"
+  },
+  "options_ui": {
+    "page": "options/options.html",
+    "open_in_tab": false
+  },
+  "background": {
+    "service_worker": "background/background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "*://bitwarden.oknagc.ru/*"
+      ],
+      "js": [
+        "content/bitwarden.js"
+      ],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": [
+        "*://*.oknagc.ru/*"
+      ],
+      "js": [
+        "content/adfs.js"
+      ],
+      "run_at": "document_idle"
+    }
+  ]
+}

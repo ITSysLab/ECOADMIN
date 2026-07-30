@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Настройки ECOADMIN</title>
+  <link rel="stylesheet" href="options.css">
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="logo">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 15a3 3 0 100-6 3 3 0 000 6z"/>
+          <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/>
+        </svg>
+        <h2>Настройки ECOADMIN</h2>
+      </div>
+    </div>
+
+    <div class="tabs">
+      <button class="tab-button active" data-tab="gemini">Gemini API</button>
+      <button class="tab-button" data-tab="bitwarden">Bitwarden SSO</button>
+      <button class="tab-button" data-tab="rules">Правила</button>
+    </div>
+
+    <div class="card tab-content active" id="gemini-tab">
+      <h3>Интеграция с Google AI Studio (Gemini)</h3>
+      <p class="subtitle">Укажите ваш персональный API ключ Google AI Studio для распознавания PDF документов.</p>
+
+      <div class="form-group">
+        <label for="apiKey">API Key (Google AI Studio):</label>
+        <div class="input-with-button">
+          <input type="password" id="apiKey" placeholder="AIzaSy..." autocomplete="off">
+          <button type="button" id="toggleVisibilityBtn" class="secondary-btn">Показать</button>
+        </div>
+        <small class="help-text">Получить ключ можно бесплатно в <a href="https://aistudio.google.com/app/apikey" target="_blank">Google AI Studio</a>.</small>
+      </div>
+
+      <div class="form-group">
+        <label for="modelSelect">Модель Gemini:</label>
+        <select id="modelSelect">
+          <option value="gemini-3.5-flash-lite" selected>Gemini 3.5 Flash Lite (Рекомендуется)</option>
+          <option value="gemini-2.0-flash">Gemini 2.0 Flash</option>
+          <option value="gemini-1.5-flash">Gemini 1.5 Flash</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="card tab-content" id="bitwarden-tab">
+      <h3>Автоматический вход Bitwarden</h3>
+      <p class="subtitle">Данные для автоматического прохождения SSO и формы авторизации ADFS.</p>
+
+      <div class="form-group">
+        <label for="bwSsoId">SSO идентификатор:</label>
+        <input type="text" id="bwSsoId" placeholder="oknagc" autocomplete="off">
+      </div>
+
+      <div class="form-group">
+        <label for="bwLogin">Логин ADFS:</label>
+        <input type="text" id="bwLogin" placeholder="username@oknagc.ru" autocomplete="off">
+      </div>
+
+      <div class="form-group">
+        <label for="bwPassword">Пароль ADFS:</label>
+        <div class="input-with-button">
+          <input type="password" id="bwPassword" placeholder="Ваш пароль" autocomplete="off">
+          <button type="button" id="toggleBwPasswordBtn" class="secondary-btn">Показать</button>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="bwMasterPassword">Мастер-пароль (Разблокировка):</label>
+        <div class="input-with-button">
+          <input type="password" id="bwMasterPassword" placeholder="Мастер-пароль Bitwarden" autocomplete="off">
+          <button type="button" id="toggleBwMasterBtn" class="secondary-btn">Показать</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card tab-content" id="rules-tab">
+      <h3>Правила "Коллекции"</h3>
+      <p class="subtitle">Настройте, в какую коллекцию Bitwarden сохранять логин в зависимости от организации.</p>
+
+      <div class="form-group">
+        <label>Правила сопоставления (Организация → Путь к коллекции):</label>
+        <div id="collectionRulesContainer">
+          <!-- Сюда скрипт добавит строки правил -->
+        </div>
+        <button type="button" id="addCollectionRuleBtn" class="secondary-btn" style="margin-top: 8px;">+ Добавить правило</button>
+      </div>
+
+      <div class="form-group" style="margin-top: 24px;">
+        <label for="defaultCollection">Коллекция по умолчанию (если ничего не совпало):</label>
+        <input type="text" id="defaultCollection" placeholder="ЭкоОкна/AD/oknagc/ecookna.oknagc.ru">
+        <small class="help-text">Сюда будут попадать все остальные организации.</small>
+      </div>
+    </div>
+
+    <div class="actions">
+      <div style="display: flex; gap: 8px;">
+        <button id="saveBtn" class="primary-btn">Сохранить настройки</button>
+        <button id="exportBtn" class="secondary-btn" style="background: #e2e8f0;">Экспорт</button>
+        <button id="importBtn" class="secondary-btn" style="background: #e2e8f0;">Импорт</button>
+      </div>
+      <input type="file" id="importFile" accept=".json" style="display: none;">
+      <span id="statusMessage" class="status-msg"></span>
+    </div>
+  </div>
+
+  <script src="options.js"></script>
+</body>
+</html>

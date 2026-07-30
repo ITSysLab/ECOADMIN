@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>ECOADMIN - PDF Access Request</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="popup-container">
+    <!-- Header -->
+    <header class="header">
+      <div class="brand">
+        <svg class="brand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+          <polyline points="14 2 14 8 20 8"/>
+          <line x1="16" y1="13" x2="8" y2="13"/>
+          <line x1="16" y1="17" x2="8" y2="17"/>
+          <polyline points="10 9 9 9 8 9"/>
+        </svg>
+        <span class="brand-title">ECOADMIN PDF</span>
+      </div>
+      <button id="openSettingsBtn" class="icon-btn" title="Настройки API Key">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="3"/>
+          <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/>
+        </svg>
+      </button>
+    </header>
+
+    <!-- Trigger Actions Area -->
+    <section class="controls-section">
+      <button id="analyzeTabBtn" class="primary-btn full-width">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+        Анализировать открытую вкладку
+      </button>
+      <div style="font-size: 11px; color: #94a3b8; text-align: center; margin-top: 6px; line-height: 1.3;">
+        Внимание: Если вы заполняете PDF прямо в браузере, сначала <b>Сохраните</b> его (кнопка ⬇️ вверху справа), иначе плагин прочитает старую (пустую) версию файла с диска!
+      </div>
+
+      <div class="divider"><span>ИЛИ</span></div>
+
+      <div id="dropZone" class="drop-zone">
+        <input type="file" id="fileInput" accept="application/pdf" hidden>
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
+          <polyline points="17 8 12 3 7 8"/>
+          <line x1="12" y1="3" x2="12" y2="15"/>
+        </svg>
+        <p>Перетащите PDF файл сюда</p>
+        <small>или нажмите для выбора файла</small>
+      </div>
+    </section>
+
+    <!-- Loading Spinner -->
+    <div id="loadingView" class="loading-view hidden">
+      <div class="spinner"></div>
+      <p id="loadingText">Идёт анализ документа через Gemini AI...</p>
+    </div>
+
+    <!-- Alert / Warning Container -->
+    <div id="alertBox" class="alert-box hidden">
+      <div class="alert-icon" id="alertIcon">⚠️</div>
+      <div class="alert-content">
+        <h4 id="alertTitle">Предупреждение</h4>
+        <p id="alertMessage">Некоторые поля не заполнены.</p>
+      </div>
+    </div>
+
+    <!-- Extracted Form Fields -->
+    <section id="resultsSection" class="results-section hidden">
+      <div class="section-title">Извлеченные данные сотрудника</div>
+
+      <div class="field-group">
+        <label for="fullNameInput">Ф.И.О. сотрудника <span class="req">*</span></label>
+        <input type="text" id="fullNameInput" placeholder="Фамилия Имя Отчество">
+      </div>
+
+      <div class="field-group">
+        <label for="organizationInput">Организация <span class="req">*</span></label>
+        <input type="text" id="organizationInput" placeholder="ООО / АО / ЗСК ...">
+      </div>
+
+      <div class="row-fields">
+        <div class="field-group flex-1">
+          <label for="positionInput">Должность <span class="req">*</span></label>
+          <input type="text" id="positionInput" placeholder="Должность">
+        </div>
+        <div class="field-group flex-1">
+          <label for="departmentInput">Подразделение</label>
+          <input type="text" id="departmentInput" placeholder="Отдел">
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label for="emailDomainInput">Почтовый домен</label>
+        <input type="text" id="emailDomainInput" value="@ecookna.ru">
+      </div>
+
+      <!-- Generated Credentials (Hidden by default, shown after Bitwarden stage) -->
+      <div id="generatedCredentialsSection" class="field-group hidden" style="background: rgba(16, 185, 129, 0.1); padding: 12px; border-radius: 8px; border: 1px solid rgba(16, 185, 129, 0.2); margin-top: 16px;">
+        <div style="font-size: 12px; color: var(--success); font-weight: 600; margin-bottom: 8px;">Сгенерированные данные для AD</div>
+        <div class="row-fields">
+          <div class="field-group flex-1" style="margin-bottom: 0;">
+            <label style="font-size: 11px;">Логин (Username)</label>
+            <input type="text" id="generatedUsernameInput" readonly style="background: rgba(0,0,0,0.2); color: #fff; cursor: copy;" title="Нажмите, чтобы скопировать">
+          </div>
+          <div class="field-group flex-1" style="margin-bottom: 0;">
+            <label style="font-size: 11px;">Пароль (Password)</label>
+            <input type="text" id="generatedPasswordInput" readonly style="background: rgba(0,0,0,0.2); color: #fff; cursor: copy;" title="Нажмите, чтобы скопировать">
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Footer -->
+      <div class="action-footer" style="margin-top: 16px;">
+        <button id="resetDataBtn" class="secondary-btn full-width" style="border-color: var(--error); color: var(--error);">Сбросить данные</button>
+        <button id="bitwardenBtn" class="ad-btn full-width" style="margin-bottom: 8px;" title="Авторизация в Bitwarden (Этап 2)">
+          <span>Авторизация в Bitwarden</span>
+          <span class="badge">Этап 2</span>
+        </button>
+        
+        <div style="margin: 16px 0 8px 0; display: flex; align-items: center; justify-content: center; font-size: 13px;">
+          <input type="checkbox" id="bwUserCreatedCheckbox" style="margin-right: 8px; cursor: pointer; width: 16px; height: 16px;">
+          <label for="bwUserCreatedCheckbox" style="color: var(--text-light); cursor: pointer;">Я создал(а) учетную запись в Bitwarden</label>
+        </div>
+
+        <button id="createAdUserBtn" class="ad-btn full-width disabled-btn" title="Создание пользователя Active Directory (Этап 3)" disabled style="opacity: 0.5; cursor: not-allowed; filter: grayscale(100%);">
+          <span>Создать пользователя в AD</span>
+          <span class="badge">Этап 3</span>
+        </button>
+      </div>
+    </section>
+  </div>
+
+  <!-- Scripts -->
+  <script src="../lib/pdf-lib.min.js"></script>
+  <script src="../lib/pdf.min.js"></script>
+  <script src="../utils/pdf-extractor.js"></script>
+  <script src="../utils/gemini-client.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>
