@@ -1,3 +1,26 @@
+# Проверка наличия Google Chrome
+$chromePath1 = "C:\Program Files\Google\Chrome\Application\chrome.exe"
+$chromePath2 = "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe"
+$chromePath3 = "$env:LOCALAPPDATA\Google\Chrome\Application\chrome.exe"
+
+if (!(Test-Path $chromePath1) -and !(Test-Path $chromePath2) -and !(Test-Path $chromePath3)) {
+    Write-Host ""
+    Write-Host "=========================================================" -ForegroundColor Red
+    Write-Host "ОШИБКА: Браузер Google Chrome не найден на этом ПК!" -ForegroundColor Red
+    Write-Host "Для работы данного плагина необходимо использовать Chrome." -ForegroundColor Yellow
+    Write-Host "Пожалуйста, скачайте и установите браузер с официального сайта:" -ForegroundColor Yellow
+    Write-Host "https://www.google.com/chrome/" -ForegroundColor Cyan
+    Write-Host "После установки запустите этот скрипт еще раз." -ForegroundColor Yellow
+    Write-Host "=========================================================" -ForegroundColor Red
+    Write-Host ""
+    
+    # Пытаемся открыть ссылку в браузере по умолчанию
+    Start-Process "https://www.google.com/chrome/"
+    
+    Start-Sleep -Seconds 15
+    exit
+}
+
 $repoUrl = "https://github.com/ITSysLab/ECOADMIN/archive/refs/heads/master.zip"
 $destZip = "$env:TEMP\ECOADMIN.zip"
 $destFolder = "C:\ECOADMIN-Extension"
