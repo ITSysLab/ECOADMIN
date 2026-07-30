@@ -206,7 +206,29 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    // 3. Perfect Validation
+    // 3. Organization vs Domain Check
+    const org = organizationInput.value.trim().toLowerCase();
+    const domain = emailDomainInput.value.trim().toLowerCase();
+    
+    if (org.includes('экоокна') && domain !== '@ecookna.ru' && domain !== '') {
+      showAlert(
+        'warning',
+        '⚠️ Несовпадение домена',
+        `Организация "ЭкоОкна", но почтовый домен указан как "${domain}". Ожидается: @ecookna.ru. Проверьте правильность.`
+      );
+      return;
+    }
+    
+    if (org.includes('евроокна') && domain !== '@eurookna.ru' && domain !== '') {
+      showAlert(
+        'warning',
+        '⚠️ Несовпадение домена',
+        `Организация "ЕвроОкна", но почтовый домен указан как "${domain}". Ожидается: @eurookna.ru. Проверьте правильность.`
+      );
+      return;
+    }
+
+    // 4. Perfect Validation
     showAlert(
       'success',
       '✅ Документ подтверждён',
