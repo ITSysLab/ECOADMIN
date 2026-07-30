@@ -40,6 +40,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const importBtn = document.getElementById('importBtn');
   const importFile = document.getElementById('importFile');
   const statusMessage = document.getElementById('statusMessage');
+  
+  const copyUpdateCmdBtn = document.getElementById('copyUpdateCmdBtn');
 
   // Load existing settings
   chrome.storage.local.get([
@@ -203,6 +205,27 @@ document.addEventListener('DOMContentLoaded', () => {
     reader.readAsText(file);
     importFile.value = ''; // Reset input
   });
+
+  // Copy Update Command
+  if (copyUpdateCmdBtn) {
+    copyUpdateCmdBtn.addEventListener('click', () => {
+      const cmd = `Invoke-WebRequest -Uri "https://raw.githubusercontent.com/ITSysLab/ECOADMIN/master/install.ps1" -OutFile "$env:TEMP\\install.ps1"; & "$env:TEMP\\install.ps1"`;
+      navigator.clipboard.writeText(cmd).then(() => {
+        const originalText = copyUpdateCmdBtn.textContent;
+        copyUpdateCmdBtn.textContent = '✓ Скопировано!';
+        copyUpdateCmdBtn.style.backgroundColor = 'var(--success)';
+        copyUpdateCmdBtn.style.color = '#fff';
+        copyUpdateCmdBtn.style.borderColor = 'var(--success)';
+        
+        setTimeout(() => {
+          copyUpdateCmdBtn.textContent = originalText;
+          copyUpdateCmdBtn.style.backgroundColor = '';
+          copyUpdateCmdBtn.style.color = '';
+          copyUpdateCmdBtn.style.borderColor = '';
+        }, 2500);
+      });
+    });
+  }
 
   function showStatus(text, type) {
     statusMessage.textContent = text;

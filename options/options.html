@@ -21,6 +21,7 @@
       <button class="tab-button active" data-tab="gemini">Gemini API</button>
       <button class="tab-button" data-tab="bitwarden">Bitwarden SSO</button>
       <button class="tab-button" data-tab="rules">Правила</button>
+      <button class="tab-button" data-tab="update">Обновление</button>
     </div>
 
     <div class="card tab-content active" id="gemini-tab">
@@ -93,6 +94,17 @@
         <label for="defaultCollection">Коллекция по умолчанию (если ничего не совпало):</label>
         <input type="text" id="defaultCollection" placeholder="ЭкоОкна/AD/oknagc/ecookna.oknagc.ru">
         <small class="help-text">Сюда будут попадать все остальные организации.</small>
+      </div>
+    </div>
+
+    <div class="card tab-content" id="update-tab">
+      <h3>Обновление плагина</h3>
+      <p class="subtitle">Так как браузер блокирует автообновление локальных файлов, для обновления плагина до последней версии с GitHub выполните следующую команду в PowerShell:</p>
+      
+      <div class="form-group" style="margin-top: 16px;">
+        <div style="background: var(--bg-color); padding: 12px; border-radius: 6px; border: 1px solid var(--border-color); font-family: monospace; font-size: 12px; overflow-x: auto; white-space: pre-wrap; color: var(--text-color); margin-bottom: 8px;">Invoke-WebRequest -Uri "https://raw.githubusercontent.com/ITSysLab/ECOADMIN/master/install.ps1" -OutFile "$env:TEMP\install.ps1"; & "$env:TEMP\install.ps1"</div>
+        <button type="button" id="copyUpdateCmdBtn" class="primary-btn">Скопировать команду</button>
+        <small class="help-text" style="display: block; margin-top: 8px;">Скопируйте эту команду, нажмите <b>Win+R</b>, введите <b>powershell</b> и вставьте её туда. Плагин обновится автоматически!</small>
       </div>
     </div>
 
