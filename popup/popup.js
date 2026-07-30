@@ -31,6 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const generatedPasswordInput = document.getElementById('generatedPasswordInput');
 
   let currentExtractedData = null;
+  let loadedRules = [];
 
   // Load saved state on open
   loadState();
@@ -210,22 +211,26 @@ document.addEventListener('DOMContentLoaded', () => {
     const org = organizationInput.value.trim().toLowerCase();
     const domain = emailDomainInput.value.trim().toLowerCase();
     
-    if (org.includes('экоокна') && domain !== '@ecookna.ru' && domain !== '') {
-      showAlert(
-        'warning',
-        '⚠️ Несовпадение домена',
-        `Организация "ЭкоОкна", но почтовый домен указан как "${domain}". Ожидается: @ecookna.ru. Проверьте правильность.`
-      );
-      return;
-    }
-    
-    if (org.includes('евроокна') && domain !== '@eurookna.ru' && domain !== '') {
-      showAlert(
-        'warning',
-        '⚠️ Несовпадение домена',
-        `Организация "ЕвроОкна", но почтовый домен указан как "${domain}". Ожидается: @eurookna.ru. Проверьте правильность.`
-      );
-      return;
+    if (org) {
+      const rule = loadedRules.find(r => org.includes(r.org.toLowerCase()));
+      if (!rule) {
+        showAlert(
+          'warning',
+          '⚠️ Неизвестная организация',
+          `Организация "${organizationInput.value.trim()}" отсутствует в правилах настроек. Проверьте правильность домена вручную!`
+        );
+        return;
+      }
+
+      const expectedDomain = (rule.domain || '').toLowerCase();
+      if (expectedDomain && domain !== expectedDomain && domain !== '') {
+        showAlert(
+          'warning',
+          '⚠️ Несовпадение домена',
+          `Организация "${rule.org}", но почтовый домен указан как "${domain}". Ожидается: ${expectedDomain}. Проверьте правильность.`
+        );
+        return;
+      }
     }
 
     // 4. Perfect Validation
@@ -244,7 +249,10 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function loadState() {
-    chrome.storage.local.get(['savedExtractedData', 'generatedCredentials'], (data) => {
+    chrome.storage.local.get(['savedExtractedData', 'generatedCredentials', 'collectionRules'], (data) => {
+      if (data.collectionRules) {
+        loadedRules = data.collectionRules;
+      }
       if (data.savedExtractedData) {
         displayResults(data.savedExtractedData);
       }

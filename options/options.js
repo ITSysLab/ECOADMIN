@@ -58,16 +58,27 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Load rules
     if (items.collectionRules && items.collectionRules.length > 0) {
-      items.collectionRules.forEach(rule => addRuleRow(rule.org, rule.col));
+      items.collectionRules.forEach(rule => addRuleRow(rule.org, rule.col, rule.domain || ''));
     } else {
       // Default initial rules
-      addRuleRow('Евроокна', 'ЭкоОкна/AD/oknagc/eurookna.oknagc.ru');
-      addRuleRow('Калева', 'ЭкоОкна/AD/oknagc/kaleva.oknagc.ru');
+      addRuleRow('ЗСК ГЛАСССПРОМ', '', '');
+      addRuleRow('АО ЗМУ', '', '');
+      addRuleRow('ЕВРООКНА', 'ЭкоОкна/AD/oknagc/eurookna.oknagc.ru', '@eurookna.ru');
+      addRuleRow('КАЛЕВА', 'ЭкоОкна/AD/oknagc/kaleva.oknagc.ru', '@kaleva.ru');
+      addRuleRow('ОКНА РОСТА ДОМ', '', '');
+      addRuleRow('ОКОННАЯ МАНУФАКТУРА', '', '');
+      addRuleRow('РАМСТВОР', '', '');
+      addRuleRow('ФОТОТЕХ', '', '@phototech.ru');
+      addRuleRow('КОМПАНИЯ ФОТОТЕХ', '', '@phototech.ru');
+      addRuleRow('ЭКООКНА', 'ЭкоОкна/AD/oknagc/ecookna.oknagc.ru', '@ecookna.ru');
+      addRuleRow('ЭКООКНА МАРКЕТ', '', '@ecookna.ru');
+      addRuleRow('ЭКООКНА СИТИ', '', '@ecookna.ru');
+      addRuleRow('MarkGlass', '', '');
     }
   });
 
   // Dynamic Rule Rows Logic
-  function addRuleRow(orgVal = '', colVal = '') {
+  function addRuleRow(orgVal = '', colVal = '', domainVal = '') {
     const row = document.createElement('div');
     row.className = 'rule-row';
     row.style = 'display: flex; gap: 8px; margin-bottom: 8px;';
@@ -77,14 +88,21 @@ document.addEventListener('DOMContentLoaded', () => {
     orgInput.className = 'rule-org';
     orgInput.placeholder = 'Организация (слово)';
     orgInput.value = orgVal;
-    orgInput.style.flex = '1';
+    orgInput.style.flex = '1.2';
 
     const colInput = document.createElement('input');
     colInput.type = 'text';
     colInput.className = 'rule-col';
     colInput.placeholder = 'Полный путь коллекции';
     colInput.value = colVal;
-    colInput.style.flex = '2';
+    colInput.style.flex = '1.5';
+    
+    const domainInput = document.createElement('input');
+    domainInput.type = 'text';
+    domainInput.className = 'rule-domain';
+    domainInput.placeholder = '@домен.ru';
+    domainInput.value = domainVal;
+    domainInput.style.flex = '1';
 
     const removeBtn = document.createElement('button');
     removeBtn.type = 'button';
@@ -95,6 +113,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     row.appendChild(orgInput);
     row.appendChild(colInput);
+    row.appendChild(domainInput);
     row.appendChild(removeBtn);
 
     collectionRulesContainer.appendChild(row);
@@ -149,7 +168,8 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.rule-row').forEach(row => {
       const org = row.querySelector('.rule-org').value.trim();
       const col = row.querySelector('.rule-col').value.trim();
-      if (org && col) rules.push({ org, col });
+      const domain = row.querySelector('.rule-domain').value.trim();
+      if (org) rules.push({ org, col, domain });
     });
     const defaultCollection = defaultCollectionInput.value.trim();
     
