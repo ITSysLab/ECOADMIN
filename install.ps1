@@ -1,4 +1,4 @@
-$repoUrl = "https://github.com/ITSysLab/ECOADMIN/archive/refs/heads/main.zip"
+$repoUrl = "https://github.com/ITSysLab/ECOADMIN/archive/refs/heads/master.zip"
 $destZip = "$env:TEMP\ECOADMIN.zip"
 $destFolder = "C:\ECOADMIN-Extension"
 
@@ -11,8 +11,8 @@ if (Test-Path $destFolder) {
 }
 Expand-Archive -Path $destZip -DestinationPath $env:TEMP -Force
 
-# Архиватор GitHub добавляет "-main" к названию папки
-Move-Item -Path "$env:TEMP\ECOADMIN-main" -Destination $destFolder -Force
+# Архиватор GitHub добавляет "-master" к названию папки
+Move-Item -Path "$env:TEMP\ECOADMIN-master" -Destination $destFolder -Force
 Remove-Item $destZip -Force
 
 Write-Host ""
