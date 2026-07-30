@@ -1,0 +1,19 @@
+# Секреты и конфигурации
+ecoadmin_settings.json
+*.env
+.env*
+credentials.json
+secret*
+
+# Логи
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+*.log
+
+# Зависимости и временные файлы
+node_modules/
+.DS_Store
+Thumbs.db
+*.tmp
+*.bak
