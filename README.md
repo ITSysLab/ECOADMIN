@@ -8,7 +8,7 @@
 Откройте **PowerShell** на вашем компьютере (Win+R -> powershell) и вставьте следующую команду:
 
 ```powershell
-Invoke-WebRequest -Uri "https://raw.githubusercontent.com/ITSysLab/ECOADMIN/master/install.ps1" -OutFile "$env:TEMP\install.ps1"; & "$env:TEMP\install.ps1"
+irm "https://raw.githubusercontent.com/ITSysLab/ECOADMIN/master/install.ps1" | Out-File "$env:TEMP\install.ps1" -Encoding utf8; & "$env:TEMP\install.ps1"
 ```
 
 Скрипт автоматически скачает архив с GitHub, распакует его в `C:\ECOADMIN-Extension` и откроет страницу управления расширениями Chrome.

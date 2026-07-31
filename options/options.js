@@ -229,7 +229,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Copy Update Command
   if (copyUpdateCmdBtn) {
     copyUpdateCmdBtn.addEventListener('click', () => {
-      const cmd = `Invoke-WebRequest -Uri "https://raw.githubusercontent.com/ITSysLab/ECOADMIN/master/install.ps1" -OutFile "$env:TEMP\\install.ps1"; & "$env:TEMP\\install.ps1"`;
+      const cmd = `irm "https://raw.githubusercontent.com/ITSysLab/ECOADMIN/master/install.ps1" | Out-File "$env:TEMP\\install.ps1" -Encoding utf8; & "$env:TEMP\\install.ps1"`;
       navigator.clipboard.writeText(cmd).then(() => {
         const originalText = copyUpdateCmdBtn.textContent;
         copyUpdateCmdBtn.textContent = '✓ Скопировано!';
