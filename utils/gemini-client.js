@@ -34,8 +34,7 @@ async function analyzePdfWithGemini(pdfText, apiKeyOverride = null, onProgress =
 
   // Fallback chain prioritizing user model, then 3.x, then official working 2.0/1.5 models
   const availableFallbacks = [
-    'gemini-3.6-flash',
-    'gemini-3.5-flash-lite'
+    'gemini-3.6-flash'
   ];
   const modelChain = [chosenModel, ...availableFallbacks.filter(m => m !== chosenModel)];
 
